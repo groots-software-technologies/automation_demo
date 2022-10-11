@@ -1,0 +1,116 @@
+# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
+# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
+
+
+name: regression tests
+
+on:
+  push:
+    branches: [ "ucl-crossbrowser" ]
+  pull_request:
+    branches: [ "ucl-crossbrowser" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+#    container: ubuntu
+
+    # Service containers to run with `runner-job`
+    services:
+      selenium-hub:
+        image: selenium/hub:3.141.59-20210929
+        ports:
+          - 4444:4444
+#        options: >-
+#              --health-cmd "/opt/bin/check-grid.sh --host localhost --port 4444"
+#              --health-interval 15s
+#              --health-timeout 120s
+#              --health-retries 10
+      chrome:
+        image: selenium/node-chrome:3.141.59-20210929
+        volumes:
+          - /dev/shm:/dev/shm
+        env:
+           HUB_HOST: selenium-hub
+           HUB_PORT: 4444
+
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+#      - name: Check hub is up
+#        run: curl selenium-hub:4444 > curl_result_docker
+#        run: cat curl_result_docker
+
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: '11'
+
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v4.4
+        with:
+          maven-version: 3.6.3
+
+  #    - name: Install Google Chrome # Using shell script to install Google Chrome
+  #      uses: browser-actions/setup-chrome@latest
+  #      with:
+  #        chrome-version: stable
+      - name: Install Google Chrome # Using shell script to install Google Chrome
+        run: |
+            sudo apt install -y jq
+            chmod +x ./.github/workflows/wait-for-grid.sh
+#          chmod +x ./.github/workflows/installchrome.sh
+#          sh ./.github/workflows/installchrome.sh
+
+
+      - name: Run test cases with Maven
+        run: ./.github/workflows/wait-for-grid.sh mvn clean test -Dcucumber.filter.tags="@wip" -Dsuite=grid.xml -Dcucumber.execution.dry-run=true
+
+#      - name: Publish Test Results
+#        uses: EnricoMi/publish-unit-test-result-action@v1
+#        if: always()
+#        with:
+#          files: "target/Cucumber.xml"
+
+#          - name: Get Allure history
+#            uses: actions/checkout@v2
+#            if: always()
+#            continue-on-error: true
+#            with:
+#               ref: gh-pages
+#               path: gh-pages
+
+      - name: Allure Report action from marketplace
+        uses: simple-elf/allure-report-action@master
+        if: always()
+        #id: allure-report
+        with:
+          allure_results: target/allure-results
+          #gh_pages: gh-pages
+          allure_report: target/site/allure-report
+          allure_history: target/allure-history
+          keep_reports: 10
+#     This job step need to be enabled when report need to be published to gh-pages branches.     
+#      #  - name: Deploy report to Github Pages
+#      #    if: always()
+#      #    uses: peaceiris/actions-gh-pages@v2
+#      #    env:
+#      #       PERSONAL_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#      #       PUBLISH_BRANCH: gh-pages
+#      #       PUBLISH_DIR: allure-history
+#
+      - name: Test Reporter
+        uses: dorny/test-reporter@v1.4.3
+        if: always() # this step will run even earlier step fail
+        with:
+          name: Run Tests
+          path: "**/surefire-reports/TEST-*.xml"
+          reporter: java-junit
+#
+      - name: Save reports as artifact of build
+        if: always()           # this step will run even earlier step fails.
+        uses: actions/upload-artifact@v3
+        with:
+          path: target/   #path/to/artifact

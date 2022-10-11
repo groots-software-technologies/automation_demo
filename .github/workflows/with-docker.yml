@@ -1,0 +1,46 @@
+name: check new tests
+
+on:
+  pull_request:
+    branches: [ "ucl-crossbrowser" ]
+
+jobs:
+  dry-run:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Start containers
+        run: docker-compose up -d selenium-hub chrome
+
+      - name: see folder structure.
+        run: ls -lrth
+      - name: Install Google Chrome # Using shell script to install Google Chrome
+        run: |
+          sudo apt install -y jq
+          chmod +x ./.github/workflows/wait-for-grid.sh
+          docker ps -a 
+
+      - name: testing
+        run: docker-compose up maven
+
+      - name: Test Reporter
+        uses: dorny/test-reporter@v1.4.3
+        if: always() # this step will run even earlier step fail
+        with:
+          name: Run Tests
+          path: "**/surefire-reports/TEST-*.xml"
+          reporter: java-junit
+
+#      - name: Save reports as artifact of build
+#        if: always()           # this step will run even earlier step fails.
+#        uses: actions/upload-artifact@v3
+#        with:
+#          path: target/   #path/to/artifact
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose.yml" down

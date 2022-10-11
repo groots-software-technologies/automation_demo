@@ -1,0 +1,68 @@
+[
+  {
+    "name": "Skipped tests",
+    "messageRegex": ".*",
+    "matchedStatuses": [ "skipped" ]
+  },
+  {
+    "name": "Element not found",
+    "traceRegex": ".*no such element.*",
+    "matchedStatuses": [ "broken" ]
+  },
+  {
+    "name": "Problems with locators",
+    "traceRegex": ".*NoSuchElementException.*"
+  },
+  {
+    "name": "Problems with DOM",
+    "traceRegex": ".*StaleElementReferenceException.*"
+  },
+  {
+    "name": "Problems with timeout",
+    "messageRegex": ".*Timed out.*",
+    "traceRegex": ".*"
+  },
+  {
+    "name": "Broken tests",
+    "traceRegex": "Error.*",
+    "matchedStatuses": [ "failed"]
+  },
+  {
+    "name": "Test defect",
+    "messageRegex": ".*Expected is not a String or a RegExp.*",
+    "matchedStatuses": ["failed"]
+  },
+  {
+    "name": "Ignored tests",
+    "matchedStatuses": [
+      "skipped"
+    ]
+  },
+  {
+    "name": "Infrastructure problems",
+    "matchedStatuses": [
+      "broken",
+      "failed"
+    ],
+    "messageRegex": ".*bye-bye.*"
+  },
+  {
+    "name": "Outdated tests",
+    "matchedStatuses": [
+      "broken"
+    ],
+    "traceRegex": ".*FileNotFoundException.*"
+  },
+  {
+    "name": "Product defects",
+    "matchedStatuses": [
+      "failed"
+    ]
+  },
+  {
+    "name": "Test defects",
+    "matchedStatuses": [
+      "broken"
+    ]
+  }
+]
