@@ -13,7 +13,7 @@ import org.testng.asserts.SoftAssert;
 
 import java.io.IOException;
 
-public class AddProductsSteps extends commonMethods{
+public class AddProductsSteps extends commonMethods {
     AddProductPage objAddProductPage;
     SoftAssert softAssert;
 

@@ -24,22 +24,23 @@ public class commonMethods {
     //capture screenshots
     public static ByteArrayInputStream passedTestScreenshot = null;
     public static List<ByteArrayInputStream> screenshots = new ArrayList<>();
-    public static int scCount=0;
-    public void captureScreenshot(){
+    public static int scCount = 0;
+
+    public void captureScreenshot() {
         passedTestScreenshot = new ByteArrayInputStream(((TakesScreenshot)
                 driver).getScreenshotAs(OutputType.BYTES));
-        if(!(passedTestScreenshot == null))
+        if (!(passedTestScreenshot == null))
             screenshots.add(scCount, passedTestScreenshot);
     }
 
     //highlight the element
-    public void highLightWebElement(WebElement element){
+    public void highLightWebElement(WebElement element) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 1px solid red;');", element);
     }
 
     // unhighlight the element
-    public void unHighLightWebElement(WebElement element){
+    public void unHighLightWebElement(WebElement element) {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].removeAttribute('style','')", element);
     }
@@ -109,7 +110,7 @@ public class commonMethods {
             moveToElement(element);
             element.click();
             System.out.println(elementName + " is clicked");
-            cucumberLogs.info(elementName+" is clicked");
+            cucumberLogs.info(elementName + " is clicked");
         } catch (ElementClickInterceptedException e) {
             ((JavascriptExecutor) driver).executeScript("arguments[0].style.border='3px solid red'", element);
             JavascriptExecutor executor = (JavascriptExecutor) driver;
@@ -347,7 +348,6 @@ public class commonMethods {
         String childWindow;
         Set<String> openWindows = driver.getWindowHandles();
         System.out.println("Number of windows opened - " + openWindows.size());
-
         for (String openWindow : openWindows) {
             childWindow = openWindow;
             WebDriver newDriver = driver.switchTo().window(childWindow);
@@ -357,7 +357,6 @@ public class commonMethods {
                 return newDriver;
             }
         }
-
         System.out.println("Window title containing - " + window + " not found and hence returning old driver");
         return driver;
     }

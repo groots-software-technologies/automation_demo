@@ -12,7 +12,7 @@ Feature: Add products to the Cart
     When I logged in to the amazon application
 #    When I logged in to the amazon application using valid credentials
 #      | Username | Test@gmail.com |
-#      | Password | Test@          |
+#      | Password | Test@123       |
     And I searched for the product below
       | Product name | earphones |
     Then I see the results of searched products

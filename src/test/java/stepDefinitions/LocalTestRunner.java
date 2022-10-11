@@ -36,7 +36,6 @@ public class LocalTestRunner extends AbstractTestNGCucumberTests {
         System.out.println("---------------------------------------------");
         String browserName = globalVariables.BrowserName;
         objCommonMethods = new commonMethods();
-
         if (browserName.contains("Chrome")) {
             //We don't need to think about the Chromedriver.exe we are using WebDriver Manager to
             // handle that instead of adding it in our project like the following:

@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+
 import java.util.List;
 import java.util.Set;
 
@@ -61,7 +62,6 @@ public class AddProductPage extends commonMethods {
     //login To Application. get username and password from the data table
     public void loginToApp(DataTable details) throws InterruptedException {
         int totalRows = details.height();
-
         //Write the code to handle Data Table
         for (int i = 0; i < totalRows; i++) {
             int days;
@@ -123,7 +123,6 @@ public class AddProductPage extends commonMethods {
     //search products - inputs as string parameter
     public void searchProducts(String product) {
         System.out.println("searching....");
-
         fluentWaitForElement(txt_search, "visibilityOf", 20);
         enterText(txt_search, product);
         txt_search.sendKeys(Keys.ENTER);
@@ -138,12 +137,12 @@ public class AddProductPage extends commonMethods {
             ++i;
             System.out.println("Product " + i + ", name: " + element.getText());
         }
-
         return list_search_results_items.size() > 0;
     }
 
     //select product from results
     String product;
+
     public void selectProduct() {
         for (WebElement element : list_search_results_items) {
             System.out.println("Product name: " + element.getText() + " is selected");
@@ -155,28 +154,22 @@ public class AddProductPage extends commonMethods {
 
     //add products to cart
     String parentWindowTitle, quantities;
+
     public void addProductToCart(String quantities) throws InterruptedException {
         this.quantities = quantities;
-
         // It will return the parent window name as a String
         parentWindowTitle = driver.getTitle();
-        System.out.println("Parent Window Title: "+parentWindowTitle);
-
+        System.out.println("Parent Window Title: " + parentWindowTitle);
         driver = switchToWindow(product); //switch to product page
-
         fluentWaitForElement(product_title, "visibilityOf", 10);
         product = product_title.getText();
         System.out.println("Product Title: " + product);
-
         fluentWaitForElement(drp_quantity, "visibilityOf", 10);
         selectByVisibleText(drp_quantity, quantities);
-
         fluentWaitForElement(btn_add_to_cart, "visibilityOf", 10);
         clickElement(btn_add_to_cart, "Add to Cart");
-
         Thread.sleep(1000);
         driver.close();
-
         driver = switchToWindow(parentWindowTitle); //close child or product page return back to parent window
     }
 
@@ -189,10 +182,8 @@ public class AddProductPage extends commonMethods {
     //check products is added in to the cart
     public boolean isProductInCart() throws InterruptedException {
         int i = 0;
-
         fluentWaitForElement(list_cart_items.get(0), "visibilityOf", 30);
         System.out.println("Total items in my cart: " + list_cart_items.size());
-
         for (int j = 0; j < list_cart_items.size(); j++) {
             ++i;
             System.out.println("Actual Product " + i + " name: " + list_cart_items.get(j).getText().trim());
@@ -200,7 +191,7 @@ public class AddProductPage extends commonMethods {
             System.out.println("Expected: " + product.trim() + " Quantities: " + quantities);
             if (list_cart_items.get(j).getText().toLowerCase().contains(product.toLowerCase()) ||
                     list_cart_items.get(j).getText().trim().toLowerCase().contains(product.trim().toLowerCase()) ||
-                    list_cart_items.get(j).getText().toLowerCase().contains(product.substring(0, product.length()-10).toLowerCase())) {
+                    list_cart_items.get(j).getText().toLowerCase().contains(product.substring(0, product.length() - 10).toLowerCase())) {
                 //if(getDrp_quantity_cart.get(j).getText().contains(quantities)){}
                 highLightWebElement(list_cart_items.get(j));
                 highLightWebElement(getDrp_quantity_cart.get(j));
@@ -210,7 +201,6 @@ public class AddProductPage extends commonMethods {
                 return true;
             }
         }
-
         System.out.println("Product: " + product + ", not found in my cart");
         return false;
     }
@@ -222,7 +212,6 @@ public class AddProductPage extends commonMethods {
         int i = 0;
         for (int j = 0; j < list_cart_items.size(); j++) {
             ++i;
-
             if (list_cart_items.get(j).getText().contains(product)) {
                 highLightWebElement(list_cart_items.get(j));
                 highLightWebElement(getDrp_quantity_cart.get(j));
@@ -233,7 +222,6 @@ public class AddProductPage extends commonMethods {
                 break;
             }
         }
-
         System.out.println("Product name: " + product + ", is deleted from my cart");
     }
 }
