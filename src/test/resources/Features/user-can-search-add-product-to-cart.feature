@@ -9,10 +9,10 @@ Feature: Add products to the Cart
     Then Landing page is displayed
 
   Scenario: Login to Amazon application, search and add products to the cart
-#    When I logged in to the amazon application
-    When I logged in to the amazon application using valid credentials
-      | Username | Test@gmail.com |
-      | Password | Test@          |
+    When I logged in to the amazon application
+#    When I logged in to the amazon application using valid credentials
+#      | Username | Test@gmail.com |
+#      | Password | Test@          |
     And I searched for the product below
       | Product name | earphones |
     Then I see the results of searched products

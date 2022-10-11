@@ -1,5 +1,6 @@
 package stepDefinitions;
 
+import PageMethods.commonMethods;
 import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
 
@@ -13,6 +14,7 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.*;
 import org.openqa.selenium.WebDriver;
+import utilities.globalVariables;
 
 @CucumberOptions(tags = "", features = "src/test/resources/Features",
         glue = {"stepDefinitions"},

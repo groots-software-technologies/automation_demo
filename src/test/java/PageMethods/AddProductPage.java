@@ -202,10 +202,11 @@ public class AddProductPage extends commonMethods {
                     list_cart_items.get(j).getText().trim().toLowerCase().contains(product.trim().toLowerCase()) ||
                     list_cart_items.get(j).getText().toLowerCase().contains(product.substring(0, product.length()-10).toLowerCase())) {
                 //if(getDrp_quantity_cart.get(j).getText().contains(quantities)){}
-                highLightWebElement(driver, list_cart_items.get(j));
-                highLightWebElement(driver, getDrp_quantity_cart.get(j));
-                Thread.sleep(1000);
+                highLightWebElement(list_cart_items.get(j));
+                highLightWebElement(getDrp_quantity_cart.get(j));
                 captureScreenshot();
+                unHighLightWebElement(list_cart_items.get(j));
+                unHighLightWebElement(getDrp_quantity_cart.get(j));
                 return true;
             }
         }
@@ -223,8 +224,11 @@ public class AddProductPage extends commonMethods {
             ++i;
 
             if (list_cart_items.get(j).getText().contains(product)) {
-                highLightWebElement(driver, list_cart_items.get(j));
-                highLightWebElement(driver, getDrp_quantity_cart.get(j));
+                highLightWebElement(list_cart_items.get(j));
+                highLightWebElement(getDrp_quantity_cart.get(j));
+                captureScreenshot();
+                unHighLightWebElement(list_cart_items.get(j));
+                unHighLightWebElement(getDrp_quantity_cart.get(j));
                 clickElement(link_delete_product_cart.get(j), "Delete product");
                 break;
             }

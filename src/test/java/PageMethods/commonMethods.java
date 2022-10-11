@@ -20,16 +20,28 @@ public class commonMethods {
     public static WebDriver driver;
     public static FluentWait<WebDriver> fluentWait;
     public static Wait<WebDriver> fWait;
-    public static ByteArrayInputStream passedTestScreenshot = null;
 
+    //capture screenshots
+    public static ByteArrayInputStream passedTestScreenshot = null;
+    public static List<ByteArrayInputStream> screenshots = new ArrayList<>();
+    public static int scCount=0;
     public void captureScreenshot(){
         passedTestScreenshot = new ByteArrayInputStream(((TakesScreenshot)
                 driver).getScreenshotAs(OutputType.BYTES));
+        if(!(passedTestScreenshot == null))
+            screenshots.add(scCount, passedTestScreenshot);
     }
 
-    public void highLightWebElement(WebDriver driver, WebElement element){
+    //highlight the element
+    public void highLightWebElement(WebElement element){
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 2px solid red;');", element);
+        js.executeScript("arguments[0].setAttribute('style', 'background: yellow; border: 1px solid red;');", element);
+    }
+
+    // unhighlight the element
+    public void unHighLightWebElement(WebElement element){
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].removeAttribute('style','')", element);
     }
 
     // to launch browser
