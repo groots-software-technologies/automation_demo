@@ -10,5 +10,5 @@ public class globalVariables {
 	public static final String DEV_URL = "https://www.amazon.in/";
 	public static final String Username = "Test@gmail.com";
 	public static final String Invalid_Username = "Test@pass";
-	public static final String Password = "Test@123";
+	public static final String Password = "Test@pass";
 }

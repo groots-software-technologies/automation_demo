@@ -24,21 +24,17 @@ public class Hooks {
     @After
     public void tearDown(Scenario scenario) throws IOException {
         if (!(commonMethods.screenshots.size() == 0)) {
-//            try {
             for (int i = commonMethods.screenshots.size() - 1; i >= 0; i--) {
-                if(!(commonMethods.screenshots.get(i) == null))
+                if (!(commonMethods.screenshots.get(i) == null))
                     Allure.addAttachment(scenario.getName(), commonMethods.screenshots.get(i)); // stick it in the report
 
             }
-//            }catch (Exception ignored){}
         }
-
         if (scenario.isFailed()) {
             final ByteArrayInputStream screenshot = new ByteArrayInputStream(((TakesScreenshot)
                     objCommonMethods.driver).getScreenshotAs(OutputType.BYTES));
             Allure.addAttachment(scenario.getName(), screenshot); // stick it in the report
-        }
-        else{
+        } else {
             final ByteArrayInputStream screenshot = new ByteArrayInputStream(((TakesScreenshot)
                     objCommonMethods.driver).getScreenshotAs(OutputType.BYTES));
             Allure.addAttachment(scenario.getName(), screenshot); // stick it in the report
