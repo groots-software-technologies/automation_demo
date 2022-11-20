@@ -23,6 +23,13 @@
     </properties>
 
     <dependencies>
+        <!-- *********** Appium ********** -->
+        <!-- https://mvnrepository.com/artifact/io.appium/java-client -->
+        <dependency>
+            <groupId>io.appium</groupId>
+            <artifactId>java-client</artifactId>
+            <version>6.1.0</version>
+        </dependency>
 
         <!-- *********** Selenium ********** -->
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->

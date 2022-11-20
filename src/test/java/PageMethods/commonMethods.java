@@ -1,13 +1,10 @@
 package PageMethods;
 
-import io.qameta.allure.Allure;
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
 import org.testng.annotations.Optional;
 import utilities.cucumberLogs;
 import utilities.globalVariables;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.time.Duration;
@@ -107,7 +104,7 @@ public class commonMethods {
     //Click on element using 'click()' or javascript executor interface
     public static void clickElement(WebElement element, String elementName) {
         try {
-            moveToElement(element);
+            //moveToElement(element);
             element.click();
             System.out.println(elementName + " is clicked");
             cucumberLogs.info(elementName + " is clicked");
@@ -122,7 +119,7 @@ public class commonMethods {
 
     //Enter text
     public static void enterText(WebElement elem, String enterText) {
-        moveToElement(elem);
+        //moveToElement(elem);
         elem.clear();
         elem.sendKeys(enterText);
         cucumberLogs.info(enterText + " is entered");
@@ -271,16 +268,16 @@ public class commonMethods {
     }
 
     //mouse over
-    public static void moveToElement(WebElement elem) {
-        Actions action = new Actions(driver);
-        action.moveToElement(elem).build().perform();
-    }
-
-    //double click on element
-    public void doubleClick(WebElement element) {
-        Actions action = new Actions(driver);
-        action.doubleClick(element).build().perform();
-    }
+//    public static void moveToElement(WebElement elem) {
+//        Actions action = new Actions(driver);
+//        action.moveToElement(elem).build().perform();
+//    }
+//
+//    //double click on element
+//    public void doubleClick(WebElement element) {
+//        Actions action = new Actions(driver);
+//        action.doubleClick(element).build().perform();
+//    }
 
     // To get the element with Parameterized locator
     public By parameterizeLocator(WebElement elem, String parameters) {

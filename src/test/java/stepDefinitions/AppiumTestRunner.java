@@ -1,6 +1,7 @@
 package stepDefinitions;
 
 import PageMethods.commonMethods;
+import factory.DriverFactory;
 import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -31,31 +32,17 @@ public class AppiumTestRunner extends AbstractTestNGCucumberTests {
     public WebDriver driver;
 
     @BeforeMethod(alwaysRun = true)
-    public void setup() throws InterruptedException {
-        System.out.println("Inside Set up method ");
-        System.out.println("---------------------------------------------");
-        String browserName = globalVariables.BrowserName;
-        objCommonMethods = new commonMethods();
-        if (browserName.contains("Chrome")) {
-            //We don't need to think about the Chromedriver.exe we are using WebDriver Manager to
-            // handle that instead of adding it in our project like the following:
-            WebDriverManager.chromedriver().setup();
-            ChromeOptions chromeOptions = new ChromeOptions();
-            chromeOptions.addArguments("--incognito");
-            DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-            capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
-            driver = new ChromeDriver(chromeOptions);
-
-        } else if (browserName.contains("FireFox")) {
-            WebDriverManager.firefoxdriver().setup();
-            driver = new FirefoxDriver();
-
-        } else if (browserName.contains("internet explorer")) {
-            WebDriverManager.iedriver().setup();
-            driver = new InternetExplorerDriver();
+    public void setUp() throws InterruptedException {
+        try {
+            DriverFactory driverFactory = new DriverFactory();
+            WebDriver driver = driverFactory.setDesiredCapabilities();
+            objCommonMethods = new commonMethods();
+            //objCommonMethods.launchBrowser();
+        } catch (Exception e) {
+            System.out.println("Exception in Runner class: " + e.getMessage());
+            //DriverFactory.getDriver().quit();
+            DriverFactory.closeAndroidDriver();
         }
-        objCommonMethods.driver = driver;
-        objCommonMethods.launchBrowser();
     }
 
     @DataProvider
@@ -66,7 +53,7 @@ public class AppiumTestRunner extends AbstractTestNGCucumberTests {
 
     @AfterMethod
     public void tearDown() throws IOException {
-        objCommonMethods.closebrowser();
+        DriverFactory.closeAndroidDriver();
     }
 
 }

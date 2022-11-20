@@ -85,7 +85,7 @@ public class homePageMethod extends commonMethods {
 
     public void logoutApp() {
         fluentWaitForElement(link_accountList, "visibilityOf", 10);
-        moveToElement(link_accountList);
+        //moveToElement(link_accountList);
 
         scrollDownByVisibilityOfElement(link_sign_out);
         clickElement(link_sign_out, "Sign out");
