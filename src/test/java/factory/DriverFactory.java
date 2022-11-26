@@ -3,6 +3,7 @@ package factory;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.MobileElement;
 import io.appium.java_client.android.AndroidDriver;
+import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -52,16 +53,16 @@ public class DriverFactory {
             DesiredCapabilities capabilities = DesiredCapabilities.chrome();
             capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
             threadLocalDriver.set(new ChromeDriver(chromeOptions));
-            cucumberLogs.info(browserName+" is opened");
+            cucumberLogs.info(browserName + " is opened");
 
         } else if (browserName.contains("FireFox")) {
             WebDriverManager.firefoxdriver().setup();
             threadLocalDriver.set(new FirefoxDriver());
-            cucumberLogs.info(browserName+" is opened");
+            cucumberLogs.info(browserName + " is opened");
         } else if (browserName.contains("internet explorer")) {
             WebDriverManager.iedriver().setup();
             threadLocalDriver.set(new InternetExplorerDriver());
-            cucumberLogs.info(browserName+" is opened");
+            cucumberLogs.info(browserName + " is opened");
         }
         getDriver().manage().deleteAllCookies();
         getDriver().manage().window().maximize();
@@ -72,7 +73,7 @@ public class DriverFactory {
     //for CrossBrowserRunner
     //@Parameters({"browser", "version", "platform", "username", "accessKey"})
     public WebDriver setDriver(String browser, String version, String platform, String username, String accesskey, String type) throws MalformedURLException {
-        boolean local  = Boolean.parseBoolean(System.getProperty("LT_TUNNEL"));
+        boolean local = Boolean.parseBoolean(System.getProperty("LT_TUNNEL"));
         System.out.print("System.getenv(LT_TUNNEL) = ");
         System.out.println(local);
         RemoteWebDriver connection;
@@ -83,7 +84,7 @@ public class DriverFactory {
         capability.setCapability(CapabilityType.VERSION, version);
         capability.setCapability(CapabilityType.PLATFORM, platform);
         capability.setCapability("build", "Parallel-Test-3");
-        capability.setCapability("tunnel",local);
+        capability.setCapability("tunnel", local);
         capability.setCapability("network", true);
         capability.setCapability("video", true);
         capability.setCapability("console", true);
@@ -113,7 +114,7 @@ public class DriverFactory {
                 DesiredCapabilities capabilities = DesiredCapabilities.chrome();
                 capabilities.setCapability(ChromeOptions.CAPABILITY, chromeOptions);
                 connection = new RemoteWebDriver(new URL(gridURL), capabilities);
-                cucumberLogs.info(browserName+" is opened");
+                cucumberLogs.info(browserName + " is opened");
             }
         } catch (MalformedURLException ignored) {
         }
@@ -134,8 +135,7 @@ public class DriverFactory {
     }
 
     //close window opened by threadLocalDriver and remove threadLocalDriver
-    public static void closeBrowser()
-    {
+    public static void closeBrowser() {
         threadLocalDriver.get().quit();
         System.out.println(" --------------------------------------------------\nDriver closed");
         //threadLocalDriver.remove();
@@ -145,9 +145,66 @@ public class DriverFactory {
     public static AppiumDriver<MobileElement> appiumDriver;
     public static WebDriverWait wait;
     private static AppiumDriverLocalService server;
+    private static IOSDriver<MobileElement> iosDriver;
 
     /**
-     * setting desired capabilities
+     * setting desired capabilities for iOS
+     *
+     * @return
+     */
+    public IOSDriver<MobileElement> setDesiredCapabilities(String platformName) throws MalformedURLException {
+        if (platformName.equalsIgnoreCase("ios")) {
+
+            /**
+             * Start the Appium Service with AppiumDriverLocalService
+             * Check the method in details at the bottom of the Page
+             */
+//			startAppiumServer();
+
+            final DesiredCapabilities capabilities = new DesiredCapabilities();
+
+            /**
+             * For launching the test without Installing the App leave below two lines and (App) capability as Commented
+             **/
+
+//			File app = new File(System.getProperty("user.dir") + "/App/Amazon_shopping.apk");
+//			capabilities.setCapability("app", app.getAbsolutePath());
+
+            cucumberLogs.info("DriverFactory - Setting the Desired value for the iOS Device");
+
+            //String ANDROID_DEVICE_SOCKET = appConfig.getValue("appPackage") + "_devtools_remote";
+
+            capabilities.setCapability("platformName", "iOS");
+            capabilities.setCapability("platformVersion", "16.0");
+            capabilities.setCapability("deviceName", "iPhone XR");
+            capabilities.setCapability("udid", "auto");
+//            capabilities.setCapability("bundleId", "");
+//            capabilities.setCapability("xcodeOrgId", "");
+//            capabilities.setCapability("xcodeSigningId", "iPhone Developer");
+//            capabilities.setCapability("updatedWDABundleId", "");
+
+            //capabilities.setCapability("instrumentApp", true);
+            //capabilities.setCapability("noReset", false);
+            //capabilities.setCapability("androidDeviceSocket", ANDROID_DEVICE_SOCKET);
+            //capabilities.setCapability("newCommandTimeout", 150);
+
+//    		 Starting the Appium Desktop on IP :127.0.0.1  and Port : 4723
+            iosDriver = new IOSDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+
+            wait = new WebDriverWait(iosDriver, 30);
+            System.out.println("Driver Initialized: " + iosDriver);
+            cucumberLogs.info("Driver Initialized: " + iosDriver);
+
+            return iosDriver;
+        } else {
+            System.out.println("Expected Platform not specified");
+            cucumberLogs.warn("Expected Platform not specified");
+        }
+        return null;
+    }
+
+    /**
+     * setting desired capabilities for android
      *
      * @return
      */
@@ -181,9 +238,9 @@ public class DriverFactory {
             //String ANDROID_DEVICE_SOCKET = appConfig.getValue("appPackage") + "_devtools_remote";
 
             capabilities.setCapability("platformName", appConfig.getValue("Platform"));
-            capabilities.setCapability("platformVersion",appConfig.getValue("androidVersion"));
+            capabilities.setCapability("platformVersion", appConfig.getValue("androidVersion"));
 
-            capabilities.setCapability("deviceName",appConfig.getValue("deviceName") );
+            capabilities.setCapability("deviceName", appConfig.getValue("deviceName"));
             capabilities.setCapability("udid", appConfig.getValue("udid"));
             capabilities.setCapability("appPackage", appConfig.getValue("appPackage"));
             capabilities.setCapability("appActivity", appConfig.getValue("appActivity"));
@@ -196,27 +253,19 @@ public class DriverFactory {
             //capabilities.setCapability("newCommandTimeout", 150);
 
 //    		 Starting the Appium Desktop on IP :127.0.0.1  and Port : 4723
-            appiumDriver =  new AndroidDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
+            appiumDriver = new AndroidDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
 
             wait = new WebDriverWait(appiumDriver, 30);
-            System.out.println("Driver Initialized: "+appiumDriver);
-            cucumberLogs.info("Driver Initialized: "+appiumDriver);
+            System.out.println("Driver Initialized: " + appiumDriver);
+            cucumberLogs.info("Driver Initialized: " + appiumDriver);
 
-//            PageFactory.initElements(driver, Amazon_CartPage_OR.class);
-//            PageFactory.initElements(driver, Amazon_ProductPage_OR.class);
-//            PageFactory.initElements(driver, Amazon_HamburgerMenu_OR.class);
-//            PageFactory.initElements(driver, Amazon_HomePage_OR.class);
-//            PageFactory.initElements(driver, Amazon_LoginPage_OR.class);
-//            PageFactory.initElements(driver, Amazon_SearchResultPage_OR.class);
+            return getAndroidDriver();
 
         }
-        else {
-            System.out.println("Expected Platform not specified");
-            cucumberLogs.warn("Expected Platform not specified");
-        }
 
-        return getAndroidDriver();
+        return null;
     }
+
 
     /**
      * Stop's the Appium Server and Close the Connection
@@ -228,7 +277,6 @@ public class DriverFactory {
 
     /**
      * Starting the Appium Server through Code using AppiumServiceBuilder
-     *
      */
     public static void startAppiumServer() {
 
@@ -265,7 +313,6 @@ public class DriverFactory {
     }
 
     /**
-     *
      * @return : driver
      */
     public AppiumDriver<MobileElement> getAndroidDriver() {
@@ -273,7 +320,21 @@ public class DriverFactory {
     }
 
     /**
-     *
+     * @return : ios driver
+     */
+    public IOSDriver<MobileElement> getIosDriver() {
+        return iosDriver;
+    }
+
+    /**
+     * Stop's the Appium Server and Close the Connection
+     */
+    public static void closeIosDriver() {
+        iosDriver.quit();
+        cucumberLogs.info("iOS driver is quited");
+    }
+
+    /**
      * @return : wait
      */
     public WebDriverWait getWebDriverWait() {

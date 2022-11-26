@@ -15,12 +15,9 @@ public class cucumberLogs {
     }
 
     public static void startTestCase(String sTestCaseName) {
-        Log.info(" ");
         Log.info("****************************************");
         Log.info("$$ " + sTestCaseName + " $$");
         Log.info("****************************************");
-        Log.info(" ");
-
     }
 
     //This is to print log for the ending of the test case
@@ -56,5 +53,4 @@ public class cucumberLogs {
     public static void debug(String message) {
         Log.debug(message);
     }
-
 }

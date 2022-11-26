@@ -2,7 +2,7 @@ package utilities;
 
 public class globalVariables {
 
-	static String projectDIR = System.getProperty("user.dir");
+	public static String projectDIR = System.getProperty("user.dir");
 	public static String platformName = "Android";
 	public static final String BrowserName = "Chrome";
 	public static final String Screenshots_Path = projectDIR + "\\src\\test\\resources\\Screenshots\\";

@@ -1,22 +1,20 @@
 package stepDefinitions;
 
+import AllureWriter.AllureEnvironmentWriter;
 import PageMethods.commonMethods;
+import com.google.common.collect.ImmutableMap;
 import factory.DriverFactory;
 import io.cucumber.testng.AbstractTestNGCucumberTests;
 import io.cucumber.testng.CucumberOptions;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
+import org.testng.annotations.*;
+import utilities.cucumberLogs;
 import utilities.globalVariables;
-
 import java.io.IOException;
+
+import static utilities.FilesOperation.copyFile;
+import static utilities.FilesOperation.deleteFile;
+
 
 @CucumberOptions(tags = "", features = "src/test/resources/Features",
         glue = {"stepDefinitions"},
@@ -35,7 +33,7 @@ public class AppiumTestRunner extends AbstractTestNGCucumberTests {
     public void setUp() throws InterruptedException {
         try {
             DriverFactory driverFactory = new DriverFactory();
-            WebDriver driver = driverFactory.setDesiredCapabilities();
+            WebDriver driver = driverFactory.setDesiredCapabilities("ios");
             objCommonMethods = new commonMethods();
             //objCommonMethods.launchBrowser();
         } catch (Exception e) {
@@ -54,6 +52,28 @@ public class AppiumTestRunner extends AbstractTestNGCucumberTests {
     @AfterMethod
     public void tearDown() throws IOException {
         DriverFactory.closeAndroidDriver();
+        DriverFactory.closeIosDriver();
+    }
+
+
+    //allure environment writer
+    @BeforeSuite
+    void setAllureEnvironment() throws IOException {
+        deleteFile(globalVariables.projectDIR + "\\ucl-logs.log");    //delete ucl-logs.log file
+        cucumberLogs.initLogger();  //initialize the logger
+
+        AllureEnvironmentWriter.allureEnvironmentWriter(
+                ImmutableMap.<String, String>builder()
+                        .put("Browser", globalVariables.BrowserName)
+                        .put("Browser.Version", "105.0")
+                        .put("Platform", System.getProperty("os.name"))
+                        .put("URL", "https://app-uat.ucl.ac.uk/InsideUCL/")
+                        .build());
+    }
+
+    @AfterSuite
+    void clean() throws IOException {
+        copyFile(globalVariables.projectDIR + "\\ucl-logs.log", globalVariables.projectDIR + "\\logs\\ucl-logs.log");
     }
 
 }
