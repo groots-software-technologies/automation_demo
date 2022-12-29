@@ -33,7 +33,7 @@ public class AppiumTestRunner extends AbstractTestNGCucumberTests {
     public void setUp() throws InterruptedException {
         try {
             DriverFactory driverFactory = new DriverFactory();
-            WebDriver driver = driverFactory.setDesiredCapabilities("ios");
+            driverFactory.setDesiredCapabilities("ios");
             objCommonMethods = new commonMethods();
             //objCommonMethods.launchBrowser();
         } catch (Exception e) {

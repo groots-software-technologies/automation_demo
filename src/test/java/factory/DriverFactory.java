@@ -7,7 +7,6 @@ import io.appium.java_client.ios.IOSDriver;
 import io.appium.java_client.service.local.AppiumDriverLocalService;
 import io.appium.java_client.service.local.AppiumServiceBuilder;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.log4j.PropertyConfigurator;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -19,13 +18,11 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utilities.cucumberLogs;
 import utilities.globalVariables;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.HashMap;
 
-import static utilities.SetProperties.appConfig;
 
 public class DriverFactory {
     public WebDriver driver;
@@ -142,6 +139,7 @@ public class DriverFactory {
         cucumberLogs.info(" ---------- Driver closed ---------- ");
     }
 
+    /* --------------------------------------------------------------------------------- */
     public static AppiumDriver<MobileElement> appiumDriver;
     public static WebDriverWait wait;
     private static AppiumDriverLocalService server;
@@ -233,26 +231,27 @@ public class DriverFactory {
 //			File app = new File(System.getProperty("user.dir") + "/App/Amazon_shopping.apk");
 //			capabilities.setCapability("app", app.getAbsolutePath());
 
-            cucumberLogs.info("Set The Desired value for the Test Device in App.Config file");
+            //cucumberLogs.info("Set The Desired value for the Android Device in App.Config file");
+            cucumberLogs.info("Set The Desired value for the Android Device");
 
             //String ANDROID_DEVICE_SOCKET = appConfig.getValue("appPackage") + "_devtools_remote";
 
-            capabilities.setCapability("platformName", appConfig.getValue("Platform"));
-            capabilities.setCapability("platformVersion", appConfig.getValue("androidVersion"));
-
-            capabilities.setCapability("deviceName", appConfig.getValue("deviceName"));
-            capabilities.setCapability("udid", appConfig.getValue("udid"));
-            capabilities.setCapability("appPackage", appConfig.getValue("appPackage"));
-            capabilities.setCapability("appActivity", appConfig.getValue("appActivity"));
-
-            capabilities.setCapability("automationName", appConfig.getValue("automationName"));
-
+//            capabilities.setCapability("platformName", appConfig.getValue("Platform"));
+//            capabilities.setCapability("platformVersion", appConfig.getValue("androidVersion"));
+//            capabilities.setCapability("deviceName", appConfig.getValue("deviceName"));
+//            capabilities.setCapability("udid", appConfig.getValue("udid"));
+//            capabilities.setCapability("appPackage", appConfig.getValue("appPackage"));
+//            capabilities.setCapability("appActivity", appConfig.getValue("appActivity"));
+//            capabilities.setCapability("automationName", appConfig.getValue("automationName"));
             //capabilities.setCapability("instrumentApp", true);
             //capabilities.setCapability("noReset", false);
             //capabilities.setCapability("androidDeviceSocket", ANDROID_DEVICE_SOCKET);
             //capabilities.setCapability("newCommandTimeout", 150);
-
 //    		 Starting the Appium Desktop on IP :127.0.0.1  and Port : 4723
+
+
+
+
             appiumDriver = new AndroidDriver<MobileElement>(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
 
             wait = new WebDriverWait(appiumDriver, 30);
@@ -260,7 +259,6 @@ public class DriverFactory {
             cucumberLogs.info("Driver Initialized: " + appiumDriver);
 
             return getAndroidDriver();
-
         }
 
         return null;
